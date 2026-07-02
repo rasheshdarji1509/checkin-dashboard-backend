@@ -26,10 +26,16 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, mobileNumber, email, projectName, qrCode } = req.body;
+    const { name, mobileNumber, email, projectName } = req.body;
+    let qrCode = req.body.qrCode;
 
-    if (!name || !mobileNumber || !email || !projectName || !qrCode) {
-      return res.status(400).json({ message: 'All fields are required' });
+    if (!name || !mobileNumber || !email || !projectName) {
+      return res.status(400).json({ message: 'All fields except QR code are required' });
+    }
+
+    if (!qrCode) {
+      const crypto = require('crypto');
+      qrCode = crypto.randomUUID();
     }
 
     const existing = await Customer.findOne({ qrCode });

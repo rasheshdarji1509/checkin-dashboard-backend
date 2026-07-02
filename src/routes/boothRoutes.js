@@ -131,7 +131,7 @@ router.delete('/:id', async (req, res) => {
       await customer.save();
     }
 
-    await assignment.remove();
+    await BoothAssignment.deleteOne({ _id: assignment._id });
     res.json({ message: 'Assignment deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete booth assignment', error: error.message });
