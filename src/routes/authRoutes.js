@@ -16,11 +16,19 @@ router.post('/', (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '1d'
-  });
+  const user = {
+    email: adminEmail,
+    name: process.env.ADMIN_NAME || 'Admin User',
+    role: process.env.ADMIN_ROLE || 'Administrator'
+  };
 
-  res.json({ token });
+  const token = jwt.sign(
+    { email, name: user.name, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+  );
+
+  res.json({ token, user });
 });
 
 module.exports = router;
